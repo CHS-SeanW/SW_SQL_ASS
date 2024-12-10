@@ -10,6 +10,9 @@
                 const data = new Uint8Array(e.target.result);
                 db = new SQL.Database(data);
 
+                //replace the blank value with unknown
+                //replaceBlankValuesWithUnknown(db);
+
                 // Load and display tables
                 loadAndDisplayTables();
             };
@@ -106,3 +109,42 @@
             container.appendChild(table);
         });
     }
+    //function incompleted
+    /*function replaceBlankValuesWithUnknown(db) {
+        // Get all table names from the database
+        const tables = db.exec("SELECT name FROM sqlite_master WHERE type='table';");
+        
+        if (tables.length === 0) {
+            alert("No tables found in the uploaded database.");
+            return;
+        }
+    
+        tables[0].values.forEach(([tableName]) => {
+            // Fetch all rows from the current table
+            const result = db.exec(`SELECT * FROM ${tableName}`);
+            if (result.length > 0) {
+                const columns = result[0].columns;
+                const values = result[0].values;
+    
+                // Create a new table by replacing blank values
+                const updatedValues = values.map(row => 
+                    row.map(cell => (cell === null || cell === "" ? "unknown" : cell))
+                );
+    
+                // Drop the original table and recreate it with updated data
+                db.run(`DROP TABLE IF EXISTS ${tableName}`);
+                const createTableQuery = `
+                    CREATE TABLE ${tableName} (${columns.map(col => `${col} TEXT`).join(", ")});
+                `;
+                db.run(createTableQuery);
+    
+                const insertQuery = `
+                    INSERT INTO ${tableName} (${columns.join(", ")}) VALUES 
+                    (${columns.map(() => "?").join(", ")});
+                `;
+                const stmt = db.prepare(insertQuery);
+                updatedValues.forEach(row => stmt.run(row));
+                stmt.free();
+            }
+        });
+    }*/
