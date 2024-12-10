@@ -8,11 +8,20 @@
     <!--Structure of HTML-->
     <head>
     <title>Space Exploration</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    
     <body>
     <h1></h1>
+    <h2>Upload a file to load tables</h2>
+    <input type="file" id="upload">
+
+    <h2>SQL Query Input</h2>
+    <textarea id="query-input" rows="4" placeholder="Write your SQL query here, e.g., SELECT * FROM Rockets JOIN Missions ON Rockets.Name = Missions.Rocket;"></textarea>
+    <button id="run-query">Run Query</button>
+
+    <h2>Query Results</h2>
+    <div id="query-results"></div>
     <p></p>
     </body>
     </html>
