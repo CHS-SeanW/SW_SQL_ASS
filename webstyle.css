@@ -43,3 +43,22 @@ table {
     margin-bottom: 10px;
     font-size: 1em;
 }
+
+.filters {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 5px;
+}
+
+.filter-group {
+    margin: 10px 0;
+}
+
+.filter-group label {
+    margin-right: 10px;
+}
+
+#apply-filters {
+    margin-top: 10px;
+}

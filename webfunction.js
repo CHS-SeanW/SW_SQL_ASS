@@ -11,10 +11,18 @@
                 db = new SQL.Database(data);
 
                 //replace the blank value with unknown
-                //replaceBlankValuesWithUnknown(db);
+                //replaceBlank(db);
 
                 // Load and display tables
-                loadAndDisplayTables();
+                /*const button = document.createElement("button", id = 'button1');
+                button.textContent = "Display Tables";
+                button.style.fontSize = "1.5em";
+                button.addEventListener("click", function () {
+                    loadAndDisplayTables(db);
+                });
+                document.body.appendChild(button);*/
+                // Populate filters after database load
+                populateFilters();
             };
 
             reader.readAsArrayBuffer(file);
@@ -72,6 +80,7 @@
         try {
             const results = db.exec(query);
             displayQueryResults(results);
+            console.log(results)
         } catch (err) {
             alert("Error in SQL query: " + err.message);
         }
@@ -110,7 +119,7 @@
         });
     }
     //function incompleted
-    /*function replaceBlankValuesWithUnknown(db) {
+    /*function replaceBlank(db) {
         // Get all table names from the database
         const tables = db.exec("SELECT name FROM sqlite_master WHERE type='table';");
         
@@ -148,3 +157,103 @@
             }
         });
     }*/
+
+
+function populateFilters() {
+    try {
+        // Populate Rocket dropdown
+        const rocketQuery = "SELECT DISTINCT Name FROM Rockets ORDER BY Name";
+        const rockets = db.exec(rocketQuery);
+        const rocketSelect = document.getElementById("rocket-select");
+        rocketSelect.innerHTML = '<option value="">All Rockets</option>';
+        
+        if (rockets.length > 0) {
+            rockets[0].values.forEach(([rocket]) => {
+                const option = document.createElement("option");
+                option.value = rocket;
+                option.textContent = rocket;
+                rocketSelect.appendChild(option);
+            });
+        }
+
+        // Populate Mission dropdown
+        const missionQuery = "SELECT DISTINCT Name FROM Missions ORDER BY Name";
+        const missions = db.exec(missionQuery);
+        const missionSelect = document.getElementById("mission-select");
+        missionSelect.innerHTML = '<option value="">All Missions</option>';
+        
+        if (missions.length > 0) {
+            missions[0].values.forEach(([mission]) => {
+                const option = document.createElement("option");
+                option.value = mission;
+                option.textContent = mission;
+                missionSelect.appendChild(option);
+            });
+        }
+
+        // Set date range limits based on mission dates
+        const dateQuery = "SELECT MIN(Date), MAX(Date) FROM Missions";
+        const dates = db.exec(dateQuery);
+        if (dates.length > 0 && dates[0].values.length > 0) {
+            const [minDate, maxDate] = dates[0].values[0];
+            document.getElementById("date-start").value = minDate;
+            document.getElementById("date-end").value = maxDate;
+        }
+    } catch (err) {
+        console.error("Error populating filters:", err);
+    }
+}
+
+// Function to apply filters and run query
+function applyFilters() {
+    const rocket = document.getElementById("rocket-select").value;
+    const mission = document.getElementById("mission-select").value;
+    const dateStart = document.getElementById("date-start").value;
+    const dateEnd = document.getElementById("date-end").value;
+
+    let query = `
+        SELECT 
+            M.Name as Mission_Name,
+            M.Date,
+            R.Name as Rocket_Name,
+            R.Type as Rocket_Type,
+            M.Outcome
+        FROM Missions M
+        JOIN Rockets R ON M.Rocket = R.Name
+        WHERE 1=1
+    `;
+
+    if (rocket) {
+        query += ` AND R.Name = '${rocket}'`;
+    }
+    if (mission) {
+        query += ` AND M.Name = '${mission}'`;
+    }
+    if (dateStart) {
+        query += ` AND M.Date >= '${dateStart}'`;
+    }
+    if (dateEnd) {
+        query += ` AND M.Date <= '${dateEnd}'`;
+    }
+
+    query += " ORDER BY M.Date";
+
+    runQuery(query);
+}
+
+function validateDateRange() {
+    const dateStart = document.getElementById("date-start").value;
+    const dateEnd = document.getElementById("date-end").value;
+    
+    if (dateStart && dateEnd && dateStart > dateEnd) {
+        alert("Start date cannot be later than end date");
+        return false;
+    }
+    return true;
+}
+
+function applyFilters() {
+    if (!validateDateRange()) {
+        return;
+    }
+}

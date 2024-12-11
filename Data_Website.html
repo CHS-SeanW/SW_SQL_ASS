@@ -13,9 +13,33 @@
     </head>
     <body>
     <h1></h1>
+    <!-- upload the file-->
     <h2>Upload a file to load tables</h2>
     <input type="file" id="upload">
-
+    <!--filters-->
+    <h2>Filters</h2>
+    <div class="filters">
+        <div class="filter-group">
+            <label>Rocket Type:</label>
+            <div id="rocket-type-filters" class="checkbox-group"></div>
+        </div>
+        <div class="filter-group">
+            <label>Mission Outcome:</label>
+            <div id="mission-outcome-filters" class="checkbox-group"></div>
+        </div>
+        <div class="filter-group">
+            <label>Launch Site:</label>
+            <div id="launch-site-filters" class="checkbox-group"></div>
+        </div>
+        <div class="filter-group">
+            <label for="date-range">Date Range:</label>
+            <input type="date" id="date-start">
+            <span>to</span>
+            <input type="date" id="date-end">
+        </div>
+        <button id="apply-filters">Apply Filters</button>
+    </div>
+    <!--places to write orders-->
     <h2>SQL Query Input</h2>
     <textarea id="query-input" rows="4" placeholder="Write your SQL query here, e.g., SELECT * FROM Rockets JOIN Missions ON Rockets.Name = Missions.Rocket;"></textarea>
     <button id="run-query">Run Query</button>
