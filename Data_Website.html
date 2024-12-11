@@ -19,26 +19,39 @@
     <!--filters-->
     <h2>Filters</h2>
     <div class="filters">
+        <!-- Dropdown filters -->
         <div class="filter-group">
-            <label>Rocket Type:</label>
-            <div id="rocket-type-filters" class="checkbox-group"></div>
+            <label for="rocket-select">Rocket:</label>
+            <select id="rocket-select" class="filter-select">
+                <option value="">All Rockets</option>
+            </select>
         </div>
+
         <div class="filter-group">
-            <label>Mission Outcome:</label>
-            <div id="mission-outcome-filters" class="checkbox-group"></div>
+            <label for="mission-select">Mission Status:</label>
+            <select id="mission-select" class="filter-select">
+                <option value="">All Missions</option>
+            </select>
         </div>
-        <div class="filter-group">
-            <label>Launch Site:</label>
-            <div id="launch-site-filters" class="checkbox-group"></div>
-        </div>
+
+        <!-- Date range filter -->
         <div class="filter-group">
             <label for="date-range">Date Range:</label>
             <input type="date" id="date-start">
             <span>to</span>
             <input type="date" id="date-end">
         </div>
+
+        <!-- Search filter -->
+        <div class="filter-group">
+            <label for="search-filter">Search:</label>
+            <input type="text" id="search-filter" placeholder="Search in all fields...">
+        </div>
+
         <button id="apply-filters">Apply Filters</button>
+        <button id="reset-filters">Reset Filters</button>
     </div>
+
     <!--places to write orders-->
     <h2>SQL Query Input</h2>
     <textarea id="query-input" rows="4" placeholder="Write your SQL query here, e.g., SELECT * FROM Rockets JOIN Missions ON Rockets.Name = Missions.Rocket;"></textarea>
@@ -47,6 +60,10 @@
     <h2>Query Results</h2>
     <div id="query-results"></div>
     <p></p>
+
+    <div id="display-tables-container">
+        <!-- The Display Tables button will be inserted here -->
+    </div>
     </body>
     </html>
     

@@ -14,13 +14,12 @@
                 //replaceBlank(db);
 
                 // Load and display tables
-                /*const button = document.createElement("button", id = 'button1');
+                const button = document.createElement("button", id = 'display-tables-btn');
                 button.textContent = "Display Tables";
-                button.style.fontSize = "1.5em";
-                button.addEventListener("click", function () {
+                button.addEventListener("click", function() {
                     loadAndDisplayTables(db);
                 });
-                document.body.appendChild(button);*/
+                document.getElementById("display-tables-container").appendChild(button);
                 // Populate filters after database load
                 populateFilters();
             };
@@ -199,6 +198,16 @@ function populateFilters() {
             document.getElementById("date-start").value = minDate;
             document.getElementById("date-end").value = maxDate;
         }
+
+        // Add event listener for reset filters button
+        document.getElementById("reset-filters").addEventListener("click", function() {
+            document.getElementById("rocket-select").value = "";
+            document.getElementById("mission-select").value = "";
+            document.getElementById("date-start").value = "";
+            document.getElementById("date-end").value = "";
+            document.getElementById("search-filter").value = "";
+        });
+
     } catch (err) {
         console.error("Error populating filters:", err);
     }
