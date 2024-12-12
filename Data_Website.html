@@ -18,43 +18,64 @@
     <input type="file" id="upload">
     <!--filters-->
     <h2>Filters</h2>
-    <div class="filters">
-        <!-- Dropdown filters -->
-        <div class="filter-group">
-            <label for="rocket-select">Rocket:</label>
-            <select id="rocket-select" class="filter-select">
-                <option value="">All Rockets</option>
-            </select>
+    <div class="filter-container">
+        <div class="filter-column">
+            <h3>Rocket Filters</h3>
+            <div class="filter-group">
+                <label for="rocket-name">Rocket Name:</label>
+                <select id="rocket-name"></select>
+            </div>
+            <div class="filter-group">
+                <label for="company">Company:</label>
+                <select id="company"></select>
+            </div>
+            <div class="filter-group">
+                <label for="status">Status:</label>
+                <select id="status"></select>
+            </div>
+            <div class="filter-group">
+                <label for="stages">Stages:</label>
+                <select id="stages"></select>
+            </div>
+            <div class="filter-group">
+                <label for="strap-ons">Strap-ons:</label>
+                <select id="strap-ons"></select>
+            </div>
         </div>
 
-        <div class="filter-group">
-            <label for="mission-select">Mission Status:</label>
-            <select id="mission-select" class="filter-select">
-                <option value="">All Missions</option>
-            </select>
+        <div class="filter-column">
+            <h3>Mission Filters</h3>
+            <div class="filter-group">
+                <label for="mission-name">Mission Name:</label>
+                <select id="mission-name"></select>
+            </div>
+            <div class="filter-group">
+                <label for="location">Location:</label>
+                <select id="location"></select>
+            </div>
+            <div class="filter-group">
+                <label for="mission-status">Mission Status:</label>
+                <select id="mission-status"></select>
+            </div>
+            <div class="filter-group">
+                <label for="date-start">Start Date:</label>
+                <input type="date" id="date-start">
+            </div>
+            <div class="filter-group">
+                <label for="date-end">End Date:</label>
+                <input type="date" id="date-end">
+            </div>
         </div>
+    </div>
 
-        <!-- Date range filter -->
-        <div class="filter-group">
-            <label for="date-range">Date Range:</label>
-            <input type="date" id="date-start">
-            <span>to</span>
-            <input type="date" id="date-end">
-        </div>
-
-        <!-- Search filter -->
-        <div class="filter-group">
-            <label for="search-filter">Search:</label>
-            <input type="text" id="search-filter" placeholder="Search in all fields...">
-        </div>
-
-        <button id="apply-filters">Apply Filters</button>
-        <button id="reset-filters">Reset Filters</button>
+    <div class="button-container">
+        <button onclick="applyFilters()">Apply Filters</button>
+        <button onclick="resetFilters()">Reset Filters</button>
     </div>
 
     <!--places to write orders-->
     <h2>SQL Query Input</h2>
-    <textarea id="query-input" rows="4" placeholder="Write your SQL query here, e.g., SELECT * FROM rocket JOIN mission ON rocket.Name = mission.Rocket;"></textarea>
+    <textarea id="query-input" rows="4" placeholder="Write your SQL query here"></textarea>
     <button id="run-query">Run Query</button>
 
     <h2>Query Results</h2>

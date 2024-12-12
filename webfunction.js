@@ -10,8 +10,7 @@
                 const data = new Uint8Array(e.target.result);
                 db = new SQL.Database(data);
 
-                //replace the blank value with unknown
-                //replaceBlank(db);
+
 
                 // Load and display tables
                 const button = document.createElement("button", id = 'display-tables-btn');
@@ -118,63 +117,73 @@
         });
     }
 
-function populateFilters() {
-    try {
-        // Populate Rocket dropdown
-        const rocketQuery = "SELECT DISTINCT Name FROM Rockets ORDER BY Name";
-        const rockets = db.exec(rocketQuery);
-        const rocketSelect = document.getElementById("rocket-select");
-        rocketSelect.innerHTML = '<option value="">All Rockets</option>';
-        
-        if (rockets.length > 0) {
-            rockets[0].values.forEach(([rocket]) => {
-                const option = document.createElement("option");
-                option.value = rocket;
-                option.textContent = rocket;
-                rocketSelect.appendChild(option);
-            });
+
+
+    function populateFilters() {
+        try {
+            // Rocket filters
+            const rocketQueries = {
+                'rocket-name': "SELECT DISTINCT Name FROM Rockets ORDER BY Name",
+                'company': "SELECT DISTINCT Cmp FROM Rockets ORDER BY Cmp",
+                'status': "SELECT DISTINCT Status FROM Rockets ORDER BY Status",
+                'stages': "SELECT DISTINCT Stages FROM Rockets ORDER BY Stages",
+                'strap-ons': "SELECT DISTINCT [Strap-ons] FROM Rockets ORDER BY [Strap-ons]"
+            };
+    
+            // Mission filters
+            const missionQueries = {
+                'mission-name': "SELECT DISTINCT Mission FROM Missions ORDER BY Mission",
+                'location': "SELECT DISTINCT Location FROM Missions ORDER BY Location",
+                'mission-status': "SELECT DISTINCT MissionStatus FROM Missions ORDER BY MissionStatus"
+            };
+    
+            // Populate rocket filters
+            for (const [elementId, query] of Object.entries(rocketQueries)) {
+                const results = db.exec(query);
+                const select = document.getElementById(elementId);
+                select.innerHTML = `<option value="">All ${elementId.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>`;
+                
+                if (results.length > 0) {
+                    results[0].values.forEach(([value]) => {
+                        if (value !== null && value !== "") {
+                            const option = document.createElement("option");
+                            option.value = value;
+                            option.textContent = value;
+                            select.appendChild(option);
+                        }
+                    });
+                }
+            }
+    
+            // Populate mission filters
+            for (const [elementId, query] of Object.entries(missionQueries)) {
+                const results = db.exec(query);
+                const select = document.getElementById(elementId);
+                select.innerHTML = `<option value="">All ${elementId.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>`;
+                
+                if (results.length > 0) {
+                    results[0].values.forEach(([value]) => {
+                        if (value !== null && value !== "") {
+                            const option = document.createElement("option");
+                            option.value = value;
+                            option.textContent = value;
+                            select.appendChild(option);
+                        }
+                    });
+                }
+            }
+    
+        } catch (err) {
+            console.error("Error populating filters:", err);
         }
-
-        // Populate Mission dropdown
-        const missionQuery = "SELECT DISTINCT Name FROM Missions ORDER BY Name";
-        const missions = db.exec(missionQuery);
-        const missionSelect = document.getElementById("mission-select");
-        missionSelect.innerHTML = '<option value="">All Missions</option>';
-        
-        if (missions.length > 0) {
-            missions[0].values.forEach(([mission]) => {
-                const option = document.createElement("option");
-                option.value = mission;
-                option.textContent = mission;
-                missionSelect.appendChild(option);
-            });
-        }
-
-        // Set date range limits based on mission dates
-        const dateQuery = "SELECT MIN(Date), MAX(Date) FROM Missions";
-        const dates = db.exec(dateQuery);
-        if (dates.length > 0 && dates[0].values.length > 0) {
-            const [minDate, maxDate] = dates[0].values[0];
-            document.getElementById("date-start").value = minDate;
-            document.getElementById("date-end").value = maxDate;
-        }
-
-        // Add event listener for reset filters button
-        document.getElementById("reset-filters").addEventListener("click", function() {
-            document.getElementById("rocket-select").value = "";
-            document.getElementById("mission-select").value = "";
-            document.getElementById("date-start").value = "";
-            document.getElementById("date-end").value = "";
-            document.getElementById("search-filter").value = "";
-        });
-
-    } catch (err) {
-        console.error("Error populating filters:", err);
     }
-}
 
 // Function to apply filters and run query
 function applyFilters() {
+    if (!validateDateRange()) {
+        return;
+    }
+
     const rocket = document.getElementById("rocket-select").value;
     const mission = document.getElementById("mission-select").value;
     const dateStart = document.getElementById("date-start").value;
@@ -219,10 +228,4 @@ function validateDateRange() {
         return false;
     }
     return true;
-}
-
-function applyFilters() {
-    if (!validateDateRange()) {
-        return;
-    }
 }
